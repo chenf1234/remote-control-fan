@@ -1,0 +1,121 @@
+C51 COMPILER V9.51   TUO                                                                   08/04/2019 13:13:42 PAGE 1   
+
+
+C51 COMPILER V9.51, COMPILATION OF MODULE TUO
+OBJECT MODULE PLACED IN tuo.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE tuo.c BROWSE DEBUG OBJECTEXTEND TABS(2)
+
+line level    source
+
+   1          //Ê¹ÓÃ15ÏµÁÐ51µ¥Æ¬»úµÄ¶¨Ê±Æ÷2½øÐÐÖÐ¶Ï¼ÆÊ±²úÉúPWM²¨ÐÎÐÅºÅ
+   2          #include<STC15F2K60S2.h>
+   3          int flag=0;
+   4          sbit pwm1=P1^1;
+   5          sbit key1=P3^2;//¿ª¹Ø1Òý½Å
+   6          unsigned int value[]={6,11,16,21,16,11};//Îó²îÔ­Òò£¬6-0¡ã£¬11-45¡ã£¬16-90¡ã,21-135¡ã£¬26-180¡ã
+   7          unsigned int percent = 0;//0.1ms´ÎÊý±êÊ¶
+   8          int k=0,count=0;
+   9          void Timer0Initial()
+  10          {
+  11   1        T2L = 0xAE;   
+  12   1        T2H = 0xFB;
+  13   1      } //¶¨Ê±0.1ms,11.0592MHz£¬0.01%µÄÎó²î
+  14           
+  15          void initial_Timer()
+  16          {
+  17   1        
+  18   1             
+  19   1        
+  20   1        AUXR |= 0x04; //ÉèÖÃ1TÄ£Ê½
+  21   1          
+  22   1        Timer0Initial();  
+  23   1        
+  24   1        AUXR |= 0x10;//¶¨Ê±Æ÷2¿ªÊ¼¼ÆÊ±
+  25   1        IE2 |=0x04; //ÔÊÐí¶¨Ê±Æ÷2ÖÐ¶Ï
+  26   1        EA = 1; //´ò¿ª×ÜÖÐ¶Ï
+  27   1      }
+  28           
+  29          void delay(unsigned int x)
+  30          {
+  31   1        unsigned int i,j;
+  32   1        for(i = 0;i< x; ++i)
+  33   1          for(j = 120; j >0 ; --j)
+  34   1            ;
+  35   1      }//ÑÓÊ±º¯Êý£¬1ms
+  36          
+  37          void keyscan()//°´¼üÉ¨Ãèº¯Êý
+  38          {
+  39   1        if(key1 == 0)
+  40   1        {
+  41   2          delay(3);//°´¼üÏû¶¶£¬ÑÓÊ±Ïû¶¶
+  42   2          if(key1 == 0)
+  43   2          {
+  44   3            
+  45   3            while(!key1);//°´¼ü·Å¿ª
+  46   3            
+  47   3            flag=!flag;
+  48   3          }
+  49   2          
+  50   2        }
+  51   1       
+  52   1        
+  53   1      }
+  54           
+  55          void initial()
+C51 COMPILER V9.51   TUO                                                                   08/04/2019 13:13:42 PAGE 2   
+
+  56          {
+  57   1        key1 = 1;
+  58   1        
+  59   1        
+  60   1        initial_Timer();
+  61   1      }//³õÊ¼»¯
+  62          
+  63          void Timer0() interrupt 12 //¶¨Ê±Æ÷2
+  64          {
+  65   1        if(flag==1){//Èô´ò¿ª¿ª¹Ø
+  66   2          percent += 1;//ÉèÖÃÖÜÆÚ
+  67   2          if(percent == 200)
+  68   2          {
+  69   3            count++;
+  70   3            percent = 0;
+  71   3            pwm1 = 1;
+  72   3          }//²úÉúµÍµçÆ½£¬µ±´ïµ½20msÊ±£¬½øÈëÏÂ¸öÖÜÆÚ£¬ÖØÐÂ²úÉúµ¸ßµçÆ½
+  73   2          if(percent == value[k])
+  74   2          {
+  75   3            
+  76   3            pwm1 = 0;
+  77   3          }//²úÉú¸ßµçÆ½£¬µ±Ê±¼ä´ïµ½Ê±£¬±äÎªµÍµçÆ½
+  78   2          if(count==20){
+  79   3            count=0;
+  80   3            k++;
+  81   3            if(k==6)k=0;
+  82   3          }//,13ms/60¡ã,ÑÓÊ±£¬¸ø¶æ»úÊ±¼ä×ª¶¯µ½Ö¸¶¨µÄ½Ç¶È
+  83   2        }
+  84   1        Timer0Initial();
+  85   1       
+  86   1      }
+  87          
+  88          void main()
+  89          {
+  90   1        initial();
+  91   1        while(1)
+  92   1        {
+  93   2          keyscan();
+  94   2          delay(10);
+  95   2        }
+  96   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    219    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     20    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

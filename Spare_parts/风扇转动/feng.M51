@@ -1,0 +1,239 @@
+BL51 BANKED LINKER/LOCATER V6.22                                                        08/05/2019  20:30:10  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.22, INVOKED BY:
+C:\KEIL\C51\BIN\BL51.EXE STARTUP.obj, feng1.obj TO feng RAMSIZE (256)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  STARTUP.obj (?C_STARTUP)
+  feng1.obj (FENG1)
+  C:\KEIL\C51\LIB\C51S.LIB (?C_INIT)
+
+
+LINK MAP OF MODULE:  feng (?C_STARTUP)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0004H     UNIT         ?DT?FENG1
+                    000CH     0014H                  *** GAP ***
+            BIT     0020H.0   0000H.1   UNIT         ?BI?FENG1
+                    0020H.1   0000H.7                *** GAP ***
+            IDATA   0021H     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     0008H     UNIT         ?PR?MAIN?FENG1
+            CODE    000BH     0003H     ABSOLUTE     
+            CODE    000EH     008CH     UNIT         ?C_C51STARTUP
+            CODE    009AH     0063H     UNIT         ?PR?KEYS?FENG1
+            CODE    00FDH     004DH     UNIT         ?PR?TIMER0?FENG1
+            CODE    014AH     001FH     UNIT         ?PR?INIT?FENG1
+            CODE    0169H     0019H     UNIT         ?PR?_DELAY?FENG1
+            CODE    0182H     000BH     UNIT         ?C_INITSEG
+
+
+
+OVERLAY MAP OF MODULE:   feng (?C_STARTUP)
+
+
+SEGMENT
+  +--> CALLED SEGMENT
+---------------------
+?C_C51STARTUP
+  +--> ?PR?MAIN?FENG1
+  +--> ?C_INITSEG
+
+?PR?MAIN?FENG1
+  +--> ?PR?INIT?FENG1
+  +--> ?PR?KEYS?FENG1
+
+?PR?KEYS?FENG1
+  +--> ?PR?_DELAY?FENG1
+
+
+BL51 BANKED LINKER/LOCATER V6.22                                                      08/05/2019  20:30:10  PAGE 2
+
+
+
+SYMBOL TABLE OF MODULE:  feng (?C_STARTUP)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        ?C_STARTUP
+  C:000EH         SEGMENT       ?C_C51STARTUP
+  I:0021H         SEGMENT       ?STACK
+  C:0000H         PUBLIC        ?C_STARTUP
+  D:00E0H         SYMBOL        ACC
+  D:00F0H         SYMBOL        B
+  D:0083H         SYMBOL        DPH
+  D:0082H         SYMBOL        DPL
+  N:0000H         SYMBOL        IBPSTACK
+  N:0100H         SYMBOL        IBPSTACKTOP
+  N:0080H         SYMBOL        IDATALEN
+  C:0011H         SYMBOL        IDATALOOP
+  N:0000H         SYMBOL        PBPSTACK
+  N:0100H         SYMBOL        PBPSTACKTOP
+  N:0000H         SYMBOL        PDATALEN
+  N:0000H         SYMBOL        PDATASTART
+  N:0000H         SYMBOL        PPAGE
+  N:0000H         SYMBOL        PPAGEENABLE
+  D:00A0H         SYMBOL        PPAGE_SFR
+  D:0081H         SYMBOL        SP
+  C:000EH         SYMBOL        STARTUP1
+  N:0000H         SYMBOL        XBPSTACK
+  N:0000H         SYMBOL        XBPSTACKTOP
+  N:0000H         SYMBOL        XDATALEN
+  N:0000H         SYMBOL        XDATASTART
+  C:0000H         LINE#         126
+  C:000EH         LINE#         133
+  C:0010H         LINE#         134
+  C:0011H         LINE#         135
+  C:0012H         LINE#         136
+  C:0014H         LINE#         185
+  C:0017H         LINE#         196
+  -------         ENDMOD        ?C_STARTUP
+
+  -------         MODULE        FENG1
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0080H         PUBLIC        P0
+  D:0090H         PUBLIC        P1
+  D:00B4H         PUBLIC        P4M0
+  D:00A0H         PUBLIC        P2
+  B:0020H.0       PUBLIC        fflag
+  D:00B3H         PUBLIC        P4M1
+  D:00B0H         PUBLIC        P3
+  D:00C0H         PUBLIC        P4
+  D:00C8H         PUBLIC        P5
+  B:00A8H.7       PUBLIC        EA
+  D:00E8H         PUBLIC        P6
+  B:00C0H.1       PUBLIC        pwm1
+  D:00F8H         PUBLIC        P7
+  B:00C0H.2       PUBLIC        pwm2
+  D:00A8H         PUBLIC        IE
+BL51 BANKED LINKER/LOCATER V6.22                                                      08/05/2019  20:30:10  PAGE 3
+
+
+  D:0008H         PUBLIC        speed
+  D:00B8H         PUBLIC        IP
+  D:00D8H         PUBLIC        CCON
+  C:0003H         PUBLIC        main
+  D:000AH         PUBLIC        count
+  D:0098H         PUBLIC        SCON
+  D:0089H         PUBLIC        TMOD
+  D:0088H         PUBLIC        TCON
+  C:014AH         PUBLIC        init
+  C:009AH         PUBLIC        keys
+  D:008EH         PUBLIC        AUXR
+  B:00A8H.1       PUBLIC        ET0
+  B:0088H.5       PUBLIC        TF0
+  D:008CH         PUBLIC        TH0
+  D:008AH         PUBLIC        TL0
+  C:00FDH         PUBLIC        timer0
+  B:0088H.4       PUBLIC        TR0
+  B:00B0H.2       PUBLIC        Key1
+  B:00B0H.3       PUBLIC        Key2
+  B:0090H.7       PUBLIC        Key3
+  C:016DH         PUBLIC        _Delay
+  D:00D0H         PUBLIC        PSW
+  C:0169H         SYMBOL        L?0035
+  -------         PROC          L?0034
+  -------         ENDPROC       L?0034
+  C:0169H         SYMBOL        L?0035
+  -------         PROC          _DELAY
+  D:0006H         SYMBOL        xms
+  -------         DO            
+  D:0005H         SYMBOL        i
+  -------         ENDDO         
+  C:016DH         LINE#         10
+  C:016DH         LINE#         11
+  C:016DH         LINE#         13
+  C:0176H         LINE#         14
+  C:0178H         LINE#         15
+  C:0178H         LINE#         17
+  C:0181H         LINE#         18
+  -------         ENDPROC       _DELAY
+  -------         PROC          INIT
+  C:014AH         LINE#         20
+  C:014AH         LINE#         21
+  C:014DH         LINE#         22
+  C:0150H         LINE#         23
+  C:0152H         LINE#         24
+  C:0154H         LINE#         25
+  C:0157H         LINE#         26
+  C:015AH         LINE#         27
+  C:015DH         LINE#         28
+  C:0160H         LINE#         29
+  C:0162H         LINE#         30
+  C:0164H         LINE#         31
+  C:0166H         LINE#         32
+  C:0168H         LINE#         33
+  -------         ENDPROC       INIT
+  -------         PROC          KEYS
+  C:009AH         LINE#         35
+BL51 BANKED LINKER/LOCATER V6.22                                                      08/05/2019  20:30:10  PAGE 4
+
+
+  C:009AH         LINE#         36
+  C:009DH         LINE#         37
+  C:00A0H         LINE#         38
+  C:00A3H         LINE#         40
+  C:00A5H         LINE#         41
+  C:00A5H         LINE#         42
+  C:00A8H         LINE#         43
+  C:00A8H         LINE#         44
+  C:00ABH         LINE#         45
+  C:00AEH         LINE#         46
+  C:00B1H         LINE#         48
+  C:00BDH         LINE#         49
+  C:00CFH         LINE#         50
+  C:00CFH         LINE#         51
+  C:00D2H         LINE#         52
+  C:00D2H         LINE#         53
+  C:00D5H         LINE#         54
+  C:00D8H         LINE#         55
+  C:00DBH         LINE#         57
+  C:00E6H         LINE#         58
+  C:00F9H         LINE#         59
+  C:00F9H         LINE#         60
+  C:00FCH         LINE#         61
+  C:00FCH         LINE#         62
+  -------         ENDPROC       KEYS
+  -------         PROC          TIMER0
+  C:00FDH         LINE#         64
+  C:0106H         LINE#         66
+  C:0108H         LINE#         67
+  C:010BH         LINE#         68
+  C:010EH         LINE#         69
+  C:0110H         LINE#         70
+  C:0113H         LINE#         71
+  C:011BH         LINE#         72
+  C:0126H         LINE#         73
+  C:012CH         LINE#         75
+  C:012CH         LINE#         76
+  C:013DH         LINE#         77
+  C:013FH         LINE#         78
+  C:0141H         LINE#         79
+  C:0143H         LINE#         80
+  C:0143H         LINE#         81
+  -------         ENDPROC       TIMER0
+  -------         PROC          MAIN
+  C:0003H         LINE#         82
+  C:0003H         LINE#         83
+  C:0003H         LINE#         84
+  C:0006H         LINE#         85
+  C:0006H         LINE#         86
+  C:0009H         LINE#         87
+  -------         ENDPROC       MAIN
+  -------         ENDMOD        FENG1
+
+Program Size: data=13.1 xdata=0 code=397
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

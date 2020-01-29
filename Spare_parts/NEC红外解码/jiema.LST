@@ -1,0 +1,144 @@
+C51 COMPILER V9.51   JIEMA                                                                 08/04/2019 11:58:45 PAGE 1   
+
+
+C51 COMPILER V9.51, COMPILATION OF MODULE JIEMA
+OBJECT MODULE PLACED IN jiema.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE jiema.c BROWSE DEBUG OBJECTEXTEND TABS(2)
+
+line level    source
+
+   1          #include<STC15F2K60S2.h>
+   2          #define uchar unsigned char
+   3          #define uint unsigned int
+   4          sbit led_sel=P2^3;
+   5          sbit IRIN=P3^6;
+   6          uchar irtime = 0;
+   7          uchar startflag = 0;  // 起始标志位
+   8          uchar ir_rc_ok = 0;   // 红外高/低电平时间接收完成标志
+   9          uchar bitnum = 0;
+  10          uchar ir_change_ok = 0;   // 转码完成标志
+  11           
+  12          uchar irdata[33];   // 电平时间数组
+  13          uchar ircode[4]={0,0,0,0};  // 遥控解码数组
+  14          /********* 延时函数 **********/
+  15          void delayms(uint xms)
+  16          {
+  17   1        uint i,j;
+  18   1        for(i=xms;i>0;i--)
+  19   1          for(j=110;j>0;j--);
+  20   1      }   
+  21          /********** 系统初始化 ********/
+  22          void sysinit()
+  23          {
+  24   1        // 初始化定时器
+  25   1        TMOD |= 0x20; // 设置定时器1位工作方式2 (0~255)
+  26   1        TH1 = 0x00;   // 赋初值
+  27   1        TL1 = 0x00;   ////256*(1/12m)*12=0.256ms
+  28   1        TR1 = 1;  // 启动定时器1
+  29   1        ET1 = 1;  // 使能定时器1
+  30   1       
+  31   1        // 初始化外部中断2
+  32   1        INT_CLKO |= 0x10;//开INT2；
+  33   1        EA = 1;   // 开总中断
+  34   1      }
+  35          
+  36          
+  37          /********* LED灯初始化 **********/
+  38          void IOinit(){
+  39   1        P0M0=0xff;
+  40   1        P0M1=0x00;
+  41   1        P2M1=0x00;
+  42   1        P2M0=0x08;
+  43   1        led_sel=1;
+  44   1        P0=0x00;
+  45   1      }
+  46          /************ 转换编码 *************/
+  47          void changecode()
+  48          {
+  49   1        uchar k = 1;
+  50   1        uchar i,j;
+  51   1        uchar value;
+  52   1        if(ir_rc_ok ==1)    // 如果ir接受完成就进行转码
+  53   1        {
+  54   2          for(i=0;i<4;i++)  // 获得前导码后的4个
+  55   2          {
+C51 COMPILER V9.51   JIEMA                                                                 08/04/2019 11:58:45 PAGE 2   
+
+  56   3            for(j=0;j<8;j++)//8位
+  57   3            {
+  58   4              value = value>>1; // 
+  59   4              if(irdata[k]>6&&irdata[k]<10)   // 判断数据是否为" 1 "
+  60   4              {
+  61   5                value |= 0x80;
+  62   5              }
+  63   4              k++;
+  64   4            }
+  65   3            ircode[i] = value;    // 存储 
+  66   3          }
+  67   2          if(ircode[2]==~ircode[3]){
+  68   3            ir_change_ok = 1;   // 编码转换完成标志
+  69   3            ir_rc_ok = 0;   // ir接收标志复位 
+  70   3          }
+  71   2        }
+  72   1      }
+  73          /********* 定时器1中断服务函数 ***********/
+  74          void t0()interrupt 3
+  75          {
+  76   1        irtime++;
+  77   1      }
+  78          /********* INT2处理函数 ***********/
+  79          void exint1() interrupt 10
+  80          {
+  81   1        if(startflag) 
+  82   1        {
+  83   2          if(irtime>32&&irtime<63)    // 检测前导码
+  84   2          {
+  85   3            bitnum=0;     
+  86   3          }     
+  87   2          
+  88   2          irdata[bitnum]=irtime;    // 从前导码开始接收数据
+  89   2          irtime=0;
+  90   2          bitnum++;
+  91   2          
+  92   2          if(bitnum==33)    // 前导码+4字节数据，共33比特 
+  93   2          {
+  94   3            bitnum=0;
+  95   3            ir_rc_ok = 1;
+  96   3          }   
+  97   2       
+  98   2        }
+  99   1        else
+ 100   1        {
+ 101   2          startflag = 1;
+ 102   2          irtime = 0;
+ 103   2        }
+ 104   1      }
+ 105          void main()
+ 106          {
+ 107   1        IOinit();
+ 108   1        sysinit();    // 初始化
+ 109   1        while(1)
+ 110   1        {
+ 111   2          changecode(); // 解码
+ 112   2          if(ir_change_ok == 1) {
+ 113   3            P0=ircode[2];
+ 114   3            ir_change_ok =0;
+ 115   3          }
+ 116   2        }
+ 117   1      }
+C51 COMPILER V9.51   JIEMA                                                                 08/04/2019 11:58:45 PAGE 3   
+
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    218    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     42    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,250 @@
+BL51 BANKED LINKER/LOCATER V6.22                                                        08/04/2019  12:18:25  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.22, INVOKED BY:
+C:\KEIL\C51\BIN\BL51.EXE STARTUP.obj, duo.obj TO duoji RAMSIZE (256)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  STARTUP.obj (?C_STARTUP)
+  duo.obj (DUO)
+  C:\KEIL\C51\LIB\C51S.LIB (?C_INIT)
+
+
+LINK MAP OF MODULE:  duoji (?C_STARTUP)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0014H     UNIT         ?DT?DUO
+            IDATA   001CH     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     0007H     UNIT         ?PR?TIMER0INITIAL?DUO
+                    000AH     0001H                  *** GAP ***
+            CODE    000BH     0003H     ABSOLUTE     
+            CODE    000EH     008CH     UNIT         ?C_C51STARTUP
+            CODE    009AH     0068H     UNIT         ?PR?TIMER0?DUO
+            CODE    0102H     0022H     UNIT         ?PR?KEYSCAN?DUO
+            CODE    0124H     001FH     UNIT         ?PR?_DELAY?DUO
+            CODE    0143H     001FH     UNIT         ?C_INITSEG
+            CODE    0162H     0013H     UNIT         ?PR?INITIAL_TIMER?DUO
+            CODE    0175H     000FH     UNIT         ?PR?MAIN?DUO
+            CODE    0184H     0005H     UNIT         ?PR?INITIAL?DUO
+
+
+
+OVERLAY MAP OF MODULE:   duoji (?C_STARTUP)
+
+
+SEGMENT
+  +--> CALLED SEGMENT
+---------------------
+?C_C51STARTUP
+  +--> ?PR?MAIN?DUO
+  +--> ?C_INITSEG
+
+?PR?MAIN?DUO
+  +--> ?PR?INITIAL?DUO
+  +--> ?PR?KEYSCAN?DUO
+  +--> ?PR?_DELAY?DUO
+
+?PR?INITIAL?DUO
+  +--> ?PR?INITIAL_TIMER?DUO
+
+BL51 BANKED LINKER/LOCATER V6.22                                                      08/04/2019  12:18:25  PAGE 2
+
+
+?PR?INITIAL_TIMER?DUO
+  +--> ?PR?TIMER0INITIAL?DUO
+
+?PR?KEYSCAN?DUO
+  +--> ?PR?_DELAY?DUO
+
+*** NEW ROOT ***************************************************
+
+?PR?TIMER0?DUO
+  +--> ?PR?TIMER0INITIAL?DUO
+
+
+
+SYMBOL TABLE OF MODULE:  duoji (?C_STARTUP)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        ?C_STARTUP
+  C:000EH         SEGMENT       ?C_C51STARTUP
+  I:001CH         SEGMENT       ?STACK
+  C:0000H         PUBLIC        ?C_STARTUP
+  D:00E0H         SYMBOL        ACC
+  D:00F0H         SYMBOL        B
+  D:0083H         SYMBOL        DPH
+  D:0082H         SYMBOL        DPL
+  N:0000H         SYMBOL        IBPSTACK
+  N:0100H         SYMBOL        IBPSTACKTOP
+  N:0080H         SYMBOL        IDATALEN
+  C:0011H         SYMBOL        IDATALOOP
+  N:0000H         SYMBOL        PBPSTACK
+  N:0100H         SYMBOL        PBPSTACKTOP
+  N:0000H         SYMBOL        PDATALEN
+  N:0000H         SYMBOL        PDATASTART
+  N:0000H         SYMBOL        PPAGE
+  N:0000H         SYMBOL        PPAGEENABLE
+  D:00A0H         SYMBOL        PPAGE_SFR
+  D:0081H         SYMBOL        SP
+  C:000EH         SYMBOL        STARTUP1
+  N:0000H         SYMBOL        XBPSTACK
+  N:0000H         SYMBOL        XBPSTACKTOP
+  N:0000H         SYMBOL        XDATALEN
+  N:0000H         SYMBOL        XDATASTART
+  C:0000H         LINE#         126
+  C:000EH         LINE#         133
+  C:0010H         LINE#         134
+  C:0011H         LINE#         135
+  C:0012H         LINE#         136
+  C:0014H         LINE#         185
+  C:0017H         LINE#         196
+  -------         ENDMOD        ?C_STARTUP
+
+  -------         MODULE        DUO
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0080H         PUBLIC        P0
+  D:0090H         PUBLIC        P1
+  D:00A0H         PUBLIC        P2
+BL51 BANKED LINKER/LOCATER V6.22                                                      08/04/2019  12:18:25  PAGE 3
+
+
+  D:00B0H         PUBLIC        P3
+  C:0003H         PUBLIC        Timer0Initial
+  D:00C0H         PUBLIC        P4
+  D:00C8H         PUBLIC        P5
+  B:00A8H.7       PUBLIC        EA
+  D:00E8H         PUBLIC        P6
+  B:0090H.1       PUBLIC        pwm1
+  D:00F8H         PUBLIC        P7
+  D:00A8H         PUBLIC        IE
+  C:0124H         PUBLIC        _delay
+  D:00B8H         PUBLIC        IP
+  D:0008H         PUBLIC        flag
+  D:000AH         PUBLIC        value
+  D:00D8H         PUBLIC        CCON
+  C:0175H         PUBLIC        main
+  D:0016H         PUBLIC        count
+  C:009AH         PUBLIC        Timer0
+  D:0098H         PUBLIC        SCON
+  D:0089H         PUBLIC        TMOD
+  D:0088H         PUBLIC        TCON
+  D:008EH         PUBLIC        AUXR
+  B:00A8H.1       PUBLIC        ET0
+  D:008CH         PUBLIC        TH0
+  D:008AH         PUBLIC        TL0
+  C:0162H         PUBLIC        initial_Timer
+  B:0088H.4       PUBLIC        TR0
+  D:0018H         PUBLIC        k
+  C:0184H         PUBLIC        initial
+  C:0102H         PUBLIC        keyscan
+  D:001AH         PUBLIC        percent
+  D:00D0H         PUBLIC        PSW
+  B:00B0H.2       PUBLIC        key1
+  -------         PROC          TIMER0INITIAL
+  C:0003H         LINE#         8
+  C:0003H         LINE#         9
+  C:0003H         LINE#         10
+  C:0006H         LINE#         11
+  C:0009H         LINE#         12
+  -------         ENDPROC       TIMER0INITIAL
+  -------         PROC          INITIAL_TIMER
+  C:0162H         LINE#         14
+  C:0162H         LINE#         15
+  C:0162H         LINE#         17
+  C:0164H         LINE#         18
+  C:0166H         LINE#         19
+  C:0169H         LINE#         20
+  C:016CH         LINE#         21
+  C:016FH         LINE#         22
+  C:0172H         LINE#         23
+  C:0174H         LINE#         24
+  -------         ENDPROC       INITIAL_TIMER
+  -------         PROC          _DELAY
+  D:0006H         SYMBOL        x
+  -------         DO            
+  D:0004H         SYMBOL        i
+  D:0002H         SYMBOL        j
+  -------         ENDDO         
+BL51 BANKED LINKER/LOCATER V6.22                                                      08/04/2019  12:18:25  PAGE 4
+
+
+  C:0124H         LINE#         26
+  C:0124H         LINE#         27
+  C:0124H         LINE#         29
+  C:012EH         LINE#         30
+  C:0142H         LINE#         32
+  -------         ENDPROC       _DELAY
+  -------         PROC          KEYSCAN
+  C:0102H         LINE#         34
+  C:0102H         LINE#         35
+  C:0102H         LINE#         36
+  C:0105H         LINE#         37
+  C:0105H         LINE#         38
+  C:010CH         LINE#         39
+  C:010FH         LINE#         40
+  C:010FH         LINE#         42
+  C:0112H         LINE#         44
+  C:0123H         LINE#         45
+  C:0123H         LINE#         47
+  C:0123H         LINE#         50
+  -------         ENDPROC       KEYSCAN
+  -------         PROC          INITIAL
+  C:0184H         LINE#         52
+  C:0184H         LINE#         53
+  C:0184H         LINE#         54
+  C:0186H         LINE#         57
+  -------         ENDPROC       INITIAL
+  -------         PROC          TIMER0
+  C:009AH         LINE#         60
+  C:00A1H         LINE#         62
+  C:00A9H         LINE#         63
+  C:00B1H         LINE#         64
+  C:00B7H         LINE#         65
+  C:00B7H         LINE#         66
+  C:00BFH         LINE#         67
+  C:00C5H         LINE#         68
+  C:00C7H         LINE#         69
+  C:00C7H         LINE#         70
+  C:00DAH         LINE#         71
+  C:00DAH         LINE#         73
+  C:00DCH         LINE#         74
+  C:00DCH         LINE#         75
+  C:00E4H         LINE#         76
+  C:00E8H         LINE#         77
+  C:00F0H         LINE#         78
+  C:00FAH         LINE#         79
+  C:00FAH         LINE#         80
+  C:00FAH         LINE#         81
+  C:00FDH         LINE#         83
+  -------         ENDPROC       TIMER0
+  -------         PROC          MAIN
+  C:0175H         LINE#         85
+  C:0175H         LINE#         86
+  C:0175H         LINE#         87
+  C:0178H         LINE#         88
+  C:0178H         LINE#         89
+  C:0178H         LINE#         90
+  C:017BH         LINE#         91
+BL51 BANKED LINKER/LOCATER V6.22                                                      08/04/2019  12:18:25  PAGE 5
+
+
+  C:0182H         LINE#         92
+  -------         ENDPROC       MAIN
+  -------         ENDMOD        DUO
+
+Program Size: data=29.0 xdata=0 code=392
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

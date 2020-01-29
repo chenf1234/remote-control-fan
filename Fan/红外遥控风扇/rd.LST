@@ -1,0 +1,317 @@
+C51 COMPILER V9.51   RD                                                                    09/04/2019 17:18:44 PAGE 1   
+
+
+C51 COMPILER V9.51, COMPILATION OF MODULE RD
+OBJECT MODULE PLACED IN rd.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE rd.c BROWSE DEBUG OBJECTEXTEND TABS(2)
+
+line level    source
+
+   1          #include<STC15F2K60S2.h>
+   2          #define uchar unsigned char
+   3          #define uint unsigned int
+   4          uchar arrSegSelect[] = {0x3f, 0x06, 0x5b, 0x4f, 0x66, 0x6d, 0x7d, 0x07, 0x7f, 0x6f};//0-9
+   5          unsigned int ii=0;
+   6          /***************ºìÍâÒ£¿ØÏà¹Ø*********/
+   7          sbit led_sel=P2^3;
+   8          sbit IRIN=P3^6;
+   9          uchar irtime = 0;
+  10          uchar startflag = 0;  // ÆðÊ¼±êÖ¾Î»
+  11          uchar ir_rc_ok = 0;   // ºìÍâ¸ß/µÍµçÆ½Ê±¼ä½ÓÊÕÍê³É±êÖ¾
+  12          uchar bitnum = 0;
+  13          uchar ir_change_ok = 0;   // ×ªÂëÍê³É±êÖ¾
+  14           
+  15          uchar irdata[33];   // µçÆ½Ê±¼äÊý×é
+  16          uchar ircode[4]={0,0,0,0};  // Ò£¿Ø½âÂëÊý×é
+  17          uchar condition=0;//LEDµÆÁÁµÄÇ°Ò»×´Ì¬
+  18          /***********¶æ»úÏà¹Ø****************/
+  19          int flag=0;
+  20          sbit pwm1=P1^1;
+  21          //sbit key1=P3^2;//¿ª¹Ø1Òý½Å
+  22          unsigned int value[]={6,11,16,11};//Îó²îÔ­Òò£¬6-0¡ã£¬11-45¡ã£¬16-90¡ã,21-135¡ã£¬26-180¡ã
+  23          unsigned int percent = 0;//0.1ms´ÎÊý±êÊ¶
+  24          int k=0,count=0;
+  25          /*************Ö±Á÷µç»úÏà¹Ø*****************/
+  26          sbit pwm0=P4^1;
+  27          sbit pwm2=P4^2;
+  28          bit fflag=0;//·çÉÈ×ª¶¯±êÖ¾Î»
+  29          int speed = 50,count0 = 0;
+  30          /*************·äÃùÆ÷·¢Éù*****************/
+  31          sbit sbtBeep = P3 ^ 4;                  //·äÃùÆ÷Òý½Å
+  32          uint xb=0;
+  33          /**********ÑÓÊ±´¦Àíº¯Êý***********/
+  34          void delay( unsigned int xms )
+  35          {
+  36   1          unsigned char i;
+  37   1          for( ; xms > 0; xms-- )
+  38   1              for( i = 114; i > 0; i-- )
+  39   1              {
+  40   2                  ;
+  41   2              }
+  42   1      }//1ms
+  43          /****************·äÃùÆ÷³õÊ¼»¯**************/
+  44          
+  45          void init_beep()
+  46          {
+  47   1          P3M1 = 0x00;
+  48   1          P3M0 = 0x10;                  //ÉèÖÃP3^4ÎªÍÆÍìÄ£Ê½
+  49   1          P0 = 0x00;                    //¹Ø±ÕP0¶Ë¿Ú
+  50   1          sbtBeep = 0;                  //·äÃùÆ÷Òý½ÅÖÃ0£¬ÒÔ±£»¤·äÃùÆ÷
+  51   1      }
+  52          /***********Ö±Á÷µç»ú³õÊ¼»¯************/
+  53          void init(){
+  54   1        P4M0=0x06;
+  55   1        P4M1=0x00;//ÉèÖÃP4.1,P4.2ÎªÍÆÍìÊä³ö
+C51 COMPILER V9.51   RD                                                                    09/04/2019 17:18:44 PAGE 2   
+
+  56   1        pwm0=0;
+  57   1        pwm2=0;
+  58   1        AUXR |= 0x80; //¶¨Ê±Æ÷Ê±ÖÓ1TÄ£Ê½
+  59   1        TMOD = 0x01; //ÉèÖÃ¶¨Ê±Æ÷Ä£Ê½£¬16Î»×Ô¶¯ÖØ×°ÔØ
+  60   1        TL0 = (65536-1000)%256;   
+  61   1        TH0 = (65536-1000)/256; 
+  62   1        TF0=0;
+  63   1        TR0=1;//¶¨Ê±Æ÷0¿ªÊ¼¼ÆÊ±
+  64   1        ET0=1;//´ò¿ª¶¨Ê±Æ÷0ÖÐ¶Ï
+  65   1        EA=1;//´ò¿ª×ÜÖÐ¶Ï
+  66   1      }
+  67          /**************¶æ»ú³õÊ¼»¯********/
+  68          void Timer0Initial()
+  69          {
+  70   1        T2L = 0xAE;   
+  71   1        T2H = 0xFB;
+  72   1      } //¶¨Ê±0.1ms,11.0592MHz£¬0.01%µÄÎó²î
+  73           
+  74          void initial_Timer()
+  75          {
+  76   1        
+  77   1             
+  78   1        
+  79   1        AUXR |= 0x04; //ÉèÖÃ1TÄ£Ê½
+  80   1          
+  81   1        Timer0Initial();  
+  82   1        
+  83   1        AUXR |= 0x10;//¶¨Ê±Æ÷2¿ªÊ¼¼ÆÊ±
+  84   1        IE2 |=0x04; //ÔÊÐí¶¨Ê±Æ÷2ÖÐ¶Ï
+  85   1        EA = 1; //´ò¿ª×ÜÖÐ¶Ï
+  86   1      }
+  87          void initial()
+  88          {
+  89   1      //  key1 = 1;
+  90   1        
+  91   1        
+  92   1        initial_Timer();
+  93   1      }//³õÊ¼»¯
+  94          /***********ºìÍâÒ£¿Ø³õÊ¼»¯ **********/
+  95          void sysinit()
+  96          {
+  97   1        // ³õÊ¼»¯¶¨Ê±Æ÷
+  98   1        TMOD |= 0x20; // ÉèÖÃ¶¨Ê±Æ÷1Î»¹¤×÷·½Ê½2 (0~255)
+  99   1        TH1 = 0x00;   // ¸³³õÖµ
+ 100   1        TL1 = 0x00;   ////256*(1/12m)*12=0.256ms
+ 101   1        TR1 = 1;  // Æô¶¯¶¨Ê±Æ÷1
+ 102   1        ET1 = 1;  // Ê¹ÄÜ¶¨Ê±Æ÷1
+ 103   1       
+ 104   1        // ³õÊ¼»¯Íâ²¿ÖÐ¶Ï2
+ 105   1        INT_CLKO |= 0x10;//¿ªINT2£»
+ 106   1        EA = 1;   // ¿ª×ÜÖÐ¶Ï
+ 107   1      }
+ 108          
+ 109          
+ 110          /********* LEDµÆ³õÊ¼»¯ **********/
+ 111          void IOinit(){
+ 112   1        P0M0=0xff;
+ 113   1        P0M1=0x00;
+ 114   1        P2M1=0x00;
+ 115   1        P2M0=0x08;
+ 116   1        led_sel=1;
+ 117   1        P0=0x00;
+C51 COMPILER V9.51   RD                                                                    09/04/2019 17:18:44 PAGE 3   
+
+ 118   1      }
+ 119          /*---------·äÃùÆ÷·¢Éùº¯Êý--------*/
+ 120          void beeps(){
+ 121   1        for(xb=0;xb<255;xb++){
+ 122   2          sbtBeep=1;
+ 123   2          delay(10);
+ 124   2          sbtBeep=0;
+ 125   2          delay(10);
+ 126   2        }
+ 127   1      }
+ 128          
+ 129          /***************Ö±Á÷µç»úÖÐ¶Ï´¦Àíº¯Êý***********/
+ 130          /***********ÖÐ¶Ï´¦Àíº¯Êý**********/
+ 131          void timer11()interrupt 1
+ 132          {
+ 133   1        TR0 = 0;
+ 134   1        TL0 = (65536-1000)%256;   
+ 135   1        TH0 = (65536-1000)/256; 
+ 136   1        TR0 = 1;
+ 137   1        if(fflag==1){
+ 138   2          count0++;
+ 139   2          if(count0>100){
+ 140   3            count0=0;
+ 141   3          
+ 142   3          }
+ 143   2          if(count0<=speed){
+ 144   3              pwm0=1;
+ 145   3          }
+ 146   2          else pwm0=0;
+ 147   2        }
+ 148   1        else{
+ 149   2          pwm0=0,pwm2=0;
+ 150   2        }
+ 151   1      }
+ 152          /***********¶æ»ú¶¨Ê±º¯Êý**************/
+ 153          void Timer0() interrupt 12 //¶¨Ê±Æ÷2
+ 154          {
+ 155   1        if(flag==1){//Èô´ò¿ª¿ª¹Ø
+ 156   2          percent += 1;//ÉèÖÃÖÜÆÚ
+ 157   2          if(percent == 200)
+ 158   2          {
+ 159   3            count++;
+ 160   3            percent = 0;
+ 161   3            pwm1 = 1;
+ 162   3          }//²úÉúµÍµçÆ½£¬µ±´ïµ½20msÊ±£¬½øÈëÏÂ¸öÖÜÆÚ£¬ÖØÐÂ²úÉúµ¸ßµçÆ½
+ 163   2          if(percent == value[k])
+ 164   2          {
+ 165   3            
+ 166   3            pwm1 = 0;
+ 167   3          }//²úÉú¸ßµçÆ½£¬µ±Ê±¼ä´ïµ½Ê±£¬±äÎªµÍµçÆ½
+ 168   2          if(count==21){
+ 169   3            count=0;
+ 170   3            k++;
+ 171   3            if(k==4)k=0;
+ 172   3          }//,13ms/60¡ã,ÑÓÊ±£¬¸ø¶æ»úÊ±¼ä×ª¶¯µ½Ö¸¶¨µÄ½Ç¶È
+ 173   2        }
+ 174   1        Timer0Initial();
+ 175   1       
+ 176   1      }
+ 177          /************ ×ª»»±àÂë *************/
+ 178          void changecode()
+ 179          {
+C51 COMPILER V9.51   RD                                                                    09/04/2019 17:18:44 PAGE 4   
+
+ 180   1        
+ 181   1        uchar k = 1;
+ 182   1        uchar i,j;
+ 183   1        uchar value;
+ 184   1        
+ 185   1        if(ir_rc_ok ==1)    // Èç¹ûir½ÓÊÜÍê³É¾Í½øÐÐ×ªÂë
+ 186   1        {
+ 187   2          for(i=0;i<4;i++)  // »ñµÃÇ°µ¼ÂëºóµÄ4¸ö
+ 188   2          {
+ 189   3            for(j=0;j<8;j++)//8Î»
+ 190   3            {
+ 191   4              value = value>>1; // 
+ 192   4              if(irdata[k]>6&&irdata[k]<10)   // ÅÐ¶ÏÊý¾ÝÊÇ·ñÎª" 1 "
+ 193   4              {
+ 194   5                value |= 0x80;
+ 195   5              }
+ 196   4              k++;
+ 197   4            }
+ 198   3            ircode[i] = value;    // ´æ´¢ 
+ 199   3          }
+ 200   2          if(ircode[2]==~ircode[3]&&ircode[1]==0xff){
+ 201   3            ir_change_ok = 1;   // ±àÂë×ª»»Íê³É±êÖ¾
+ 202   3            ir_rc_ok = 0;   // ir½ÓÊÕ±êÖ¾¸´Î» 
+ 203   3          }
+ 204   2          else ir_rc_ok=0;  //²»ÊÇ·ûºÏÌõ¼þµÄ±àÂë
+ 205   2        }
+ 206   1      }
+ 207          /********* ¶¨Ê±Æ÷1ÖÐ¶Ï·þÎñº¯Êý ***********/
+ 208          void t0()interrupt 3
+ 209          {
+ 210   1        irtime++;
+ 211   1      }
+ 212          /********* INT2´¦Àíº¯Êý ***********/
+ 213          void exint1() interrupt 10
+ 214          {
+ 215   1        
+ 216   1        if(startflag) 
+ 217   1        {
+ 218   2          if(irtime>32&&irtime<63)    // ¼ì²âÇ°µ¼Âë
+ 219   2          {
+ 220   3            bitnum=0;     
+ 221   3          }     
+ 222   2          
+ 223   2          irdata[bitnum]=irtime;    // ´ÓÇ°µ¼Âë¿ªÊ¼½ÓÊÕÊý¾Ý
+ 224   2          irtime=0;
+ 225   2          bitnum++;
+ 226   2          
+ 227   2          if(bitnum==33)    // Ç°µ¼Âë+4×Ö½ÚÊý¾Ý£¬¹²33±ÈÌØ 
+ 228   2          {
+ 229   3            bitnum=0;
+ 230   3            ir_rc_ok = 1;
+ 231   3          }   
+ 232   2       
+ 233   2        }
+ 234   1        else
+ 235   1        {
+ 236   2          startflag = 1;
+ 237   2          irtime = 0;
+ 238   2        }
+ 239   1        
+ 240   1      }
+ 241          /********¼üÖµ´¦Àíº¯Êý**********/
+C51 COMPILER V9.51   RD                                                                    09/04/2019 17:18:44 PAGE 5   
+
+ 242          void dealp(){
+ 243   1        switch(ircode[2]){
+ 244   2            case 0x45: flag=1;break;//¶æ»ú¿ªÊ¼Ò¡Í·
+ 245   2            case 0x46: flag=0;break;//¶æ»úÍ£Ö¹Ò¡Í·
+ 246   2            case 0x44: fflag=1;break;//·çÉÈ×ª¶¯
+ 247   2            case 0x40: fflag=0;break;//·çÉÈÍ£Ö¹×ª¶¯
+ 248   2            case 0x15: speed+=10;if(speed>100) speed=100;break;//·çÉÈ¼ÓËÙ
+ 249   2            case 0x07: speed-=10;if(speed<0)  speed=0;break;//·çÉÈ¼õËÙ
+ 250   2            default: break;
+ 251   2        }
+ 252   1      }
+ 253          /********Ö÷º¯Êý********/
+ 254          void main()
+ 255          {
+ 256   1        init_beep();
+ 257   1        init();
+ 258   1        initial();
+ 259   1        IOinit();
+ 260   1        sysinit();    // ³õÊ¼»¯
+ 261   1        while(1)
+ 262   1        {
+ 263   2          changecode(); // ½âÂë
+ 264   2          if(ir_change_ok == 1) { 
+ 265   3            dealp();
+ 266   3            ir_change_ok =0;
+ 267   3            beeps();
+ 268   3            condition=ircode[2];
+ 269   3          }
+ 270   2            if(fflag==1){
+ 271   3              led_sel=0;
+ 272   3              for(ii=6;ii<8;ii++){
+ 273   4                P0=0;
+ 274   4                P2=ii;
+ 275   4              
+ 276   4                if(ii==6)P0=arrSegSelect[speed/100];
+ 277   4                else P0=arrSegSelect[(speed/10)%10];
+ 278   4                delay(1);
+ 279   4              }
+ 280   3              P0=0;
+ 281   3            }
+ 282   2            led_sel=1;
+ 283   2            P0=condition;
+ 284   2            delay(10);  
+ 285   2        }
+ 286   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    726    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     77    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

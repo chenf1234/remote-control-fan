@@ -1,0 +1,4 @@
+"STARTUP.obj",
+"feng1.obj" 
+TO "feng" 
+RAMSIZE(256) 

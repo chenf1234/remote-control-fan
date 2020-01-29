@@ -1,0 +1,270 @@
+BL51 BANKED LINKER/LOCATER V6.22                                                        08/04/2019  11:58:45  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.22, INVOKED BY:
+C:\KEIL\C51\BIN\BL51.EXE STARTUP.obj, jiema.obj TO NEC1 RAMSIZE (256)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  STARTUP.obj (?C_STARTUP)
+  jiema.obj (JIEMA)
+  C:\KEIL\C51\LIB\C51S.LIB (?C_INIT)
+
+
+LINK MAP OF MODULE:  NEC1 (?C_STARTUP)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     002AH     UNIT         ?DT?JIEMA
+            IDATA   0032H     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     0016H     UNIT         ?PR?MAIN?JIEMA
+                    0019H     0002H                  *** GAP ***
+            CODE    001BH     0003H     ABSOLUTE     
+            CODE    001EH     001EH     UNIT         ?PR?_DELAYMS?JIEMA
+            CODE    003CH     0016H     UNIT         ?C_INITSEG
+                    0052H     0001H                  *** GAP ***
+            CODE    0053H     0003H     ABSOLUTE     
+            CODE    0056H     008CH     UNIT         ?C_C51STARTUP
+            CODE    00E2H     0043H     UNIT         ?PR?EXINT1?JIEMA
+            CODE    0125H     003EH     UNIT         ?PR?CHANGECODE?JIEMA
+            CODE    0163H     0012H     UNIT         ?PR?SYSINIT?JIEMA
+            CODE    0175H     0010H     UNIT         ?PR?IOINIT?JIEMA
+            CODE    0185H     0003H     UNIT         ?PR?T0?JIEMA
+
+
+
+OVERLAY MAP OF MODULE:   NEC1 (?C_STARTUP)
+
+
+SEGMENT
+  +--> CALLED SEGMENT
+---------------------
+?C_C51STARTUP
+  +--> ?PR?MAIN?JIEMA
+  +--> ?C_INITSEG
+
+?PR?MAIN?JIEMA
+  +--> ?PR?IOINIT?JIEMA
+  +--> ?PR?SYSINIT?JIEMA
+  +--> ?PR?CHANGECODE?JIEMA
+
+
+BL51 BANKED LINKER/LOCATER V6.22                                                      08/04/2019  11:58:45  PAGE 2
+
+
+
+SYMBOL TABLE OF MODULE:  NEC1 (?C_STARTUP)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        ?C_STARTUP
+  C:0056H         SEGMENT       ?C_C51STARTUP
+  I:0032H         SEGMENT       ?STACK
+  C:0000H         PUBLIC        ?C_STARTUP
+  D:00E0H         SYMBOL        ACC
+  D:00F0H         SYMBOL        B
+  D:0083H         SYMBOL        DPH
+  D:0082H         SYMBOL        DPL
+  N:0000H         SYMBOL        IBPSTACK
+  N:0100H         SYMBOL        IBPSTACKTOP
+  N:0080H         SYMBOL        IDATALEN
+  C:0059H         SYMBOL        IDATALOOP
+  N:0000H         SYMBOL        PBPSTACK
+  N:0100H         SYMBOL        PBPSTACKTOP
+  N:0000H         SYMBOL        PDATALEN
+  N:0000H         SYMBOL        PDATASTART
+  N:0000H         SYMBOL        PPAGE
+  N:0000H         SYMBOL        PPAGEENABLE
+  D:00A0H         SYMBOL        PPAGE_SFR
+  D:0081H         SYMBOL        SP
+  C:0056H         SYMBOL        STARTUP1
+  N:0000H         SYMBOL        XBPSTACK
+  N:0000H         SYMBOL        XBPSTACKTOP
+  N:0000H         SYMBOL        XDATALEN
+  N:0000H         SYMBOL        XDATASTART
+  C:0000H         LINE#         126
+  C:0056H         LINE#         133
+  C:0058H         LINE#         134
+  C:0059H         LINE#         135
+  C:005AH         LINE#         136
+  C:005CH         LINE#         185
+  C:005FH         LINE#         196
+  -------         ENDMOD        ?C_STARTUP
+
+  -------         MODULE        JIEMA
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0093H         PUBLIC        P0M1
+  D:0096H         PUBLIC        P2M0
+  D:0080H         PUBLIC        P0
+  D:0095H         PUBLIC        P2M1
+  D:0090H         PUBLIC        P1
+  D:00A0H         PUBLIC        P2
+  D:00B0H         PUBLIC        P3
+  D:00C0H         PUBLIC        P4
+  D:00C8H         PUBLIC        P5
+  B:00A8H.7       PUBLIC        EA
+  D:00E8H         PUBLIC        P6
+  D:00F8H         PUBLIC        P7
+  C:0125H         PUBLIC        changecode
+  D:0008H         PUBLIC        irtime
+  D:00A8H         PUBLIC        IE
+BL51 BANKED LINKER/LOCATER V6.22                                                      08/04/2019  11:58:45  PAGE 3
+
+
+  D:0009H         PUBLIC        bitnum
+  C:0163H         PUBLIC        sysinit
+  D:00B8H         PUBLIC        IP
+  C:0185H         PUBLIC        t0
+  D:00D8H         PUBLIC        CCON
+  C:0003H         PUBLIC        main
+  D:0098H         PUBLIC        SCON
+  D:0089H         PUBLIC        TMOD
+  D:0088H         PUBLIC        TCON
+  B:00A8H.3       PUBLIC        ET1
+  D:000AH         PUBLIC        ir_rc_ok
+  D:008DH         PUBLIC        TH1
+  D:000BH         PUBLIC        startflag
+  C:0175H         PUBLIC        IOinit
+  D:008BH         PUBLIC        TL1
+  B:0088H.6       PUBLIC        TR1
+  C:00E2H         PUBLIC        exint1
+  B:00A0H.3       PUBLIC        led_sel
+  D:000CH         PUBLIC        ir_change_ok
+  C:001EH         PUBLIC        _delayms
+  D:008FH         PUBLIC        INT_CLKO
+  D:000DH         PUBLIC        irdata
+  D:002EH         PUBLIC        ircode
+  D:00D0H         PUBLIC        PSW
+  D:0094H         PUBLIC        P0M0
+  -------         PROC          _DELAYMS
+  D:0006H         SYMBOL        xms
+  -------         DO            
+  D:0006H         SYMBOL        i
+  D:0004H         SYMBOL        j
+  -------         ENDDO         
+  C:001EH         LINE#         15
+  C:001EH         LINE#         16
+  C:001EH         LINE#         18
+  C:0027H         LINE#         19
+  C:003BH         LINE#         20
+  -------         ENDPROC       _DELAYMS
+  -------         PROC          SYSINIT
+  C:0163H         LINE#         22
+  C:0163H         LINE#         23
+  C:0163H         LINE#         25
+  C:0166H         LINE#         26
+  C:0169H         LINE#         27
+  C:016BH         LINE#         28
+  C:016DH         LINE#         29
+  C:016FH         LINE#         32
+  C:0172H         LINE#         33
+  C:0174H         LINE#         34
+  -------         ENDPROC       SYSINIT
+  -------         PROC          IOINIT
+  C:0175H         LINE#         38
+  C:0175H         LINE#         39
+  C:0178H         LINE#         40
+  C:017BH         LINE#         41
+  C:017DH         LINE#         42
+  C:0180H         LINE#         43
+  C:0182H         LINE#         44
+BL51 BANKED LINKER/LOCATER V6.22                                                      08/04/2019  11:58:45  PAGE 4
+
+
+  C:0184H         LINE#         45
+  -------         ENDPROC       IOINIT
+  -------         PROC          CHANGECODE
+  -------         DO            
+  D:0006H         SYMBOL        k
+  D:0005H         SYMBOL        i
+  D:0004H         SYMBOL        j
+  D:0007H         SYMBOL        value
+  -------         ENDDO         
+  C:0125H         LINE#         47
+  C:0125H         LINE#         48
+  C:0125H         LINE#         49
+  C:0127H         LINE#         52
+  C:012DH         LINE#         53
+  C:012DH         LINE#         54
+  C:012EH         LINE#         55
+  C:012EH         LINE#         56
+  C:0130H         LINE#         57
+  C:0130H         LINE#         58
+  C:0134H         LINE#         59
+  C:0144H         LINE#         60
+  C:0144H         LINE#         61
+  C:0147H         LINE#         62
+  C:0147H         LINE#         63
+  C:0148H         LINE#         64
+  C:014CH         LINE#         65
+  C:0152H         LINE#         66
+  C:0156H         LINE#         67
+  C:015CH         LINE#         68
+  C:015FH         LINE#         69
+  C:0162H         LINE#         70
+  C:0162H         LINE#         71
+  C:0162H         LINE#         72
+  -------         ENDPROC       CHANGECODE
+  -------         PROC          T0
+  C:0185H         LINE#         74
+  C:0185H         LINE#         76
+  C:0187H         LINE#         77
+  -------         ENDPROC       T0
+  -------         PROC          EXINT1
+  C:00E2H         LINE#         79
+  C:00EBH         LINE#         81
+  C:00EFH         LINE#         82
+  C:00EFH         LINE#         83
+  C:00FCH         LINE#         84
+  C:00FCH         LINE#         85
+  C:00FFH         LINE#         86
+  C:00FFH         LINE#         88
+  C:0106H         LINE#         89
+  C:0109H         LINE#         90
+  C:010BH         LINE#         92
+  C:0110H         LINE#         93
+  C:0110H         LINE#         94
+  C:0113H         LINE#         95
+  C:0116H         LINE#         96
+  C:0116H         LINE#         98
+  C:0118H         LINE#         100
+BL51 BANKED LINKER/LOCATER V6.22                                                      08/04/2019  11:58:45  PAGE 5
+
+
+  C:0118H         LINE#         101
+  C:011BH         LINE#         102
+  C:011EH         LINE#         103
+  C:011EH         LINE#         104
+  -------         ENDPROC       EXINT1
+  -------         PROC          MAIN
+  C:0003H         LINE#         105
+  C:0003H         LINE#         106
+  C:0003H         LINE#         107
+  C:0006H         LINE#         108
+  C:0009H         LINE#         109
+  C:0009H         LINE#         110
+  C:0009H         LINE#         111
+  C:000CH         LINE#         112
+  C:0011H         LINE#         113
+  C:0014H         LINE#         114
+  C:0017H         LINE#         115
+  C:0017H         LINE#         116
+  -------         ENDPROC       MAIN
+  -------         ENDMOD        JIEMA
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAYMS?JIEMA
+
+Program Size: data=51.0 xdata=0 code=389
+LINK/LOCATE RUN COMPLETE.  1 WARNING(S),  0 ERROR(S)

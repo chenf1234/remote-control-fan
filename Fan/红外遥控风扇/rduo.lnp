@@ -1,0 +1,4 @@
+"STARTUP.obj",
+"rd.obj" 
+TO "rduo" 
+RAMSIZE(256) 

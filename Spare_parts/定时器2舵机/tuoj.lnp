@@ -1,0 +1,4 @@
+"STARTUP.obj",
+"tuo.obj" 
+TO "tuoj" 
+RAMSIZE(256) 

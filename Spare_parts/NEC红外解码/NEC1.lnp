@@ -1,0 +1,4 @@
+"STARTUP.obj",
+"jiema.obj" 
+TO "NEC1" 
+RAMSIZE(256) 

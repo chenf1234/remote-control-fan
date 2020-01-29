@@ -1,0 +1,16 @@
+<html>
+<body>
+<pre>
+<h1>礦ision Build Log</h1>
+<h2>Project:</h2>
+C:\Users\10542\Documents\红外遥控风扇组件\舵机\duoji.uvproj
+Project File Date:  08/01/2019
+
+<h2>Output:</h2>
+Rebuild target 'Target 1'
+assembling STARTUP.A51...
+compiling duo.c...
+linking...
+Program Size: data=29.0 xdata=0 code=392
+creating hex file from "duoji"...
+"duoji" - 0 Error(s), 0 Warning(s).
